@@ -1,12 +1,5 @@
 from main import app
 
-# Example in test_login.py (using pytest-mock)
-from unittest.mock import patch
-
-def test_login(mocker):
-    mocker.patch("your_module.connection_function", return_value=True)
-    # Your test logic here
-
 def test_protected_routes_redirect_when_not_logged_in():
     client = app.test_client()
     protected_routes = ['/', '/data', '/manual', '/publish', '/receive']
