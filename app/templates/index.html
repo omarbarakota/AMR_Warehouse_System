@@ -1,0 +1,36 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Dashboard</title>
+</head>
+
+<body>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <script src="{{ url_for('static', filename='js/client.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/elements.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/topics.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/funcs.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+  
+    
+    
+    <h1>Control Dashboard</h1>
+    <p>Status: <span id="status">Disconnected</span></p>
+    {% if role == 'admin' %}
+    <a href="/publish">Publish MQTT Message</a>
+    {% endif %}
+    <div id="buttons-container"></div>
+    
+  
+  <div class="button-container"></div>
+  <a href="/logout"><button>Logout</button></a>
+
+  <a href="manual" class="btn">Go to Manual Control</a>
+    
+  <a href="data" class="btn">Monitoring Control</a>
+</body>
+</html>
