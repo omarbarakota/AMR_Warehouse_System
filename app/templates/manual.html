@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual Robot Control</title>
+  <link rel="stylesheet" href="../static/css/styles.css"> <!-- Updated path -->
+    
+</head>
+
+
+<body>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script src="{{ url_for('static', filename='js/client.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/manual.js') }}" defer></script>
+    
+  <div class="container">
+    <h1>Manual Robot Control</h1>
+
+
+    <div class="container">
+      <button class="button up" id="btn-up">↑ Forward</button>
+      <button class="button left" id="btn-left">← Left</button>
+      <button class="button right" id="btn-right">→ Right</button>
+      <button class="button down" id="btn-down">↓ Backward</button>
+    </div>
+  </div>
+
+  <h4>
+    <a href="/" class="btn btn-back">Back to Home</a>
+  </h4>
+  
+</body>
+</html>
