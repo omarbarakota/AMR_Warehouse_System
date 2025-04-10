@@ -27,6 +27,9 @@ jobs:
 
     - name: Install dependencies
       run: pip install --no-cache-dir -r  requirments.txt
+      
+    - name: Enter Test
+      run: cd app
 
     - name: Test with pytest
       run: python3 -m pytest
