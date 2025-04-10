@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  h1 {
+    color: #333;
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .data {
+    margin: 10px 20px;
+    font-size: 16px;
+  }
+  
+  button {
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px;
+  }
+  
+  #map {
+    height: calc(90vh - 300px); /* Dynamic height to fit screens */
+    width: 100%; /* Full width of the screen */
+  }
+  
+  .info {
+    margin: 20px;
+    font-size: 18px;
+    text-align: center;
+  }
+  
+  .button-container {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .topic {
+    margin-bottom: 20px;
+}
+
+.topic h2 {
+    color: #007BFF;
+}
+
+.data-list {
+    margin-left: 20px;
+}
+
+.data-list li {
+    margin-bottom: 5px;
+}
+
+
+
