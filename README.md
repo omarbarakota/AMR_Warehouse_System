@@ -1,5 +1,7 @@
 # Robot Monitoring and Control Dashboard
 
+[![Testing and CI / CD](https://github.com/omarbarakota/AMR_Warehouse_System/actions/workflows/image_update.yaml/badge.svg)](https://github.com/omarbarakota/AMR_Warehouse_System/actions/workflows/image_update.yaml)
+
 ## Table of Contents
 
 - [Introduction](#introduction)
