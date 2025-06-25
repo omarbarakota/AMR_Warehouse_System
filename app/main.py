@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask import Flask, render_template, redirect, url_for, request, session, jsonify
 from flask_socketio import SocketIO, emit               # For live data updates via WebSocket
 from flask_httpauth import HTTPBasicAuth                # For authentication
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 import paho.mqtt.client as mqtt
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -12,13 +14,20 @@ app.secret_key = "supersecretkey"  # Secret key for session management
 # MQTT Configuration
 import os
 # To handle the broker address in docker and pytest
-MQTT_BROKER = os.getenv("MQTT_BROKER", "localhost")
+#MQTT_BROKER = os.getenv("MQTT_BROKER", "localhost")
 #MQTT_BROKER = "host.docker.internal"  # Replace with your broker's address
-MQTT_PORT = 1883
-MQTT_TOPIC = "test/topic"
+#MQTT_PORT = os.getenv("MQTT_BROKER",1883)
+
+MQTT_BROKER = os.environ.get("MQTT_BROKER", "localhost")
+MQTT_PORT = int(os.environ.get("MQTT_PORT", 1883))
+MQTT_TOPIC = "/test/topic"
 
 # Initialize MQTT Client
 mqtt_client = mqtt.Client()
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db = SQLAlchemy(app)
 
 def on_connect(client, userdata, flags, rc):
     print(f"Connected to MQTT broker with result code {rc}")
@@ -29,7 +38,12 @@ def on_message(client, userdata, msg):
 
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
-mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
+#mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
+try:
+    mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
+    print(f"[INFO] Connected to MQTT Broker at {MQTT_BROKER}:{MQTT_PORT}")
+except Exception as e:
+    print(f"[ERROR] Could not connect to MQTT broker: {e}")
 mqtt_client.loop_start()
 
 # User credentials (username: password)
