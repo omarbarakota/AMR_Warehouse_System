@@ -1,25 +1,98 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>HTML Login Form</title>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMR Control - Login</title>
 
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #0d1117;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+
+        .login-card {
+            background-color: #161b22;
+            color: #c9d1d9;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .login-card h3 {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #8b949e;
+        }
+
+        .login-card .form-control {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            margin-bottom: 1rem;
+            height: 45px;
+        }
+
+        .login-card .form-control:focus {
+            background-color: #0d1117;
+            color: #ffffff;
+            border-color: #58a6ff;
+            box-shadow: none;
+        }
+
+        .login-card .btn-primary {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            background-color: #238636;
+            border: none;
+        }
+
+        .login-card .btn-primary:hover {
+            background-color: #2ea043;
+        }
+
+        .error {
+            color: #f85149;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
 <body>
-    <div class="main">
-        <h1>User Verification</h1>
-        <h3>Enter your login credentials</h3>
+    <div class="login-card">
+        <h1>AMR Control</h1>
+        <h3>Login to your dashboard</h3>
+
         {% if error %}
         <p class="error">{{ error }}</p>
         {% endif %}
+
         <form method="POST">
-            <input type="text" name="username" placeholder="Username" required><br>
-            <input type="password" name="password" placeholder="Password" required><br>
-            <button type="submit">Login</button>
-        </form>
-            </div>
+            <input type="text" name="username" class="form-control" placeholder="Username" required>
+            <input type="password" name="password" class="form-control" placeholder="Password" required>
+            <button type="submit" class="btn btn-primary">Login</button>
         </form>
     </div>
-</body>
 
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

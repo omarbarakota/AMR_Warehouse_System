@@ -1,54 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMR Control - Monitoring Dashboard</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            line-height: 1.6;
-        }
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #c9d1d9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      min-height: 100vh;
+    }
 
-        .topic {
-            margin-bottom: 20px;
-        }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: bold;
+      color: #ffffff;
+    }
 
-        .topic h2 {
-            margin-bottom: 5px;
-            color: #007BFF;
-        }
+    .status {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+    }
 
-        .data-list {
-            margin-left: 20px;
-        }
+    .status span {
+      font-weight: bold;
+      color: #f85149;
+    }
 
-        .data-list li {
-            margin-bottom: 5px;
-            color: #333;
-        }
-    </style>
+    .topics-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: #161b22;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .topics-section h2 {
+      color: #58a6ff;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    #topics-container {
+      margin-top: 15px;
+    }
+
+    .data-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .data-list li {
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      background-color: #21262d;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .data-list li:hover {
+      background-color: #30363d;
+    }
+
+    .back-link {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .btn-back {
+      text-decoration: none;
+      padding: 10px 20px;
+      background-color: #6c757d;
+      color: white;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background-color: #5a6268;
+    }
+
+    #messages {
+      margin-top: 20px;
+      list-style-type: none;
+      padding: 0;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    #messages li {
+      background: #21262d;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-left: 5px solid #58a6ff;
+      border-radius: 5px;
+      font-size: 0.95rem;
+    }
+  </style>
 </head>
-
 <body>
-    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-    <script src="{{ url_for('static', filename='js/client.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/elements.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/topics.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/funcs.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/monitoring.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/topics_data.js') }}" defer></script>
+  <h1>Monitoring Dashboard</h1>
 
+  <div class="status">
+    Status: <span id="status">Disconnected</span>
+  </div>
 
-
-    <h1>Monitoring Dashboard</h1>
-    <p>Status: <span id="status">Disconnected</span></p>
-    <h13>All the topics we have</h3>
+  <div class="topics-section">
+    <h2>Live Topics</h2>
     <div id="topics-container"></div>
-    <a href="/" class="btn btn-back">Back to Home</a>
-    <ul id="messages"></ul>
+  </div>
 
+  <ul id="messages"></ul>
+
+  <div class="back-link">
+    <a href="/" class="btn-back">&larr; Back to Home</a>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/mqtt.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/client.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/elements.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/topics.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/funcs.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/monitoring.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/topics_data.js') }}" defer></script>
 </body>
 </html>
