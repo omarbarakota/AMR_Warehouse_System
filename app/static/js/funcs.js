@@ -12,7 +12,7 @@ function publishMessage() {
     });
 }
 
-function createPublishButtons(topics) {
+/*function createPublishButtons(topics) {
     document.body.appendChild(buttonsContainer);
   
     topics.forEach((topic) => {
@@ -38,7 +38,7 @@ function createPublishButtons(topics) {
       buttonsContainer.appendChild(button);
     });
 }
-
+*/
 // Function to subscribe to multiple topics
 function subscribeToTopics(client, topics) {
     topics.forEach((topic) => {
