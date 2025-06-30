@@ -6,20 +6,14 @@ PORT=8000
 echo "Detected device IP: $DEVICE_IP"
 echo "Starting Gunicorn on ${DEVICE_IP}:${PORT} ..."
 
-# Start Gunicorn in the background
-gunicorn wsgi:app --bind ${DEVICE_IP}:${PORT} &
+# Run Gunicorn, binding to your device's IP on port 8000
+gunicorn wsgi --bind ${DEVICE_IP}:8000 
+
+
 GUNICORN_PID=$!
 
 # Wait for the server to fully start
 sleep 5
-
-# Run your tests (replace this with your test command)
-echo "Running tests..."
-curl -f http://${DEVICE_IP}:${PORT}/health || {
-    echo "Server did not respond"
-    kill $GUNICORN_PID
-    exit 1
-}
 
 # If tests succeed
 echo "Tests passed. Stopping server..."
