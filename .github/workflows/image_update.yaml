@@ -40,14 +40,12 @@ jobs:
 
     - name: Start Flask app
       run: |
-        nohup python app.py > flask.log 2>&1 &
-        sleep 5  # wait for the app to start
+        ./run_server.sh
 
 
     - name: Test with pytest
       run: |
-        cd app
-        python3 -m pytest
+        ./run_all_tests.sh
 
   
   
