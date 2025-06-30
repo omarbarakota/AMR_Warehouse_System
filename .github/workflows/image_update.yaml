@@ -27,7 +27,9 @@ jobs:
 
     - name: Install dependencies
       run: pip install --no-cache-dir -r  requirments.txt
-    
+
+    - name: Install Gunicorn
+      run: pip install gunicorn
 
     - name: Install Mosquitto MQTT broker
       run: sudo apt-get update && sudo apt-get install -y mosquitto
@@ -40,7 +42,7 @@ jobs:
 
     - name: Start Flask app
       run: |
-        ./run_server.sh
+        ./ci_run_server.sh
 
 
     - name: Test with pytest
