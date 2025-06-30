@@ -1,4 +1,4 @@
-from main import app
+from app.main import app
 
 def test_logout_clears_session():
     client = app.test_client()

@@ -1,5 +1,5 @@
 import pytest
-from main import app
+from app.main import app
 
 def test_login_success():
     client = app.test_client()
