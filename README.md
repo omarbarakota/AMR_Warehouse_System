@@ -1,185 +1,225 @@
-# Robot Monitoring and Control Dashboard
+Certainly. Below is your **fully updated and corrected `README.md`** file with all relevant modifications:
+
+---
+
+# AMR Control & Monitoring Web Application
 
 [![Testing and CI / CD](https://github.com/omarbarakota/AMR_Warehouse_System/actions/workflows/image_update.yaml/badge.svg)](https://github.com/omarbarakota/AMR_Warehouse_System/actions/workflows/image_update.yaml)
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Project Description](#project-description)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Folder Structure](#folder-structure)
-- [Best Practices](#best-practices)
-- [Additional Notes](#additional-notes)
+- [AMR Control \& Monitoring Web Application](#amr-control--monitoring-web-application)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Project Description](#project-description)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Folder Structure](#folder-structure)
+  - [Best Practices](#best-practices)
+  - [Additional Notes](#additional-notes)
+  - [Features](#features)
+  - [Quick Start: Deploying on Another Machine](#quick-start-deploying-on-another-machine)
+  - [More Details](#more-details)
+  - [License](#license)
+
+---
 
 ## Introduction
 
-This project provides a web-based dashboard for monitoring and controlling a robot's live data, including speed, status, and package numbers, along with a real-time location viewer. The system integrates Flask, WebSockets, Leaflet.js, and Prometheus monitoring to offer a seamless and interactive experience.
+This project is a modern web-based control and monitoring system for Autonomous Mobile Robots (AMRs). It provides a dashboard for real-time robot control, MQTT message logging, user and role management, command tracking, and system logs. The backend is built using Flask, SQLAlchemy for the database, and MQTT for robot communication. The frontend uses Bootstrap and JavaScript to deliver a clean and responsive UI.
 
 ## Project Description
 
-The dashboard allows:
+Key capabilities include:
 
-- Real-time robot data updates via WebSockets.
-- Live location tracking using geolocation and OpenStreetMap.
-- User authentication and session management.
-- Easy API endpoints for data retrieval and updates.
-- Prometheus metrics for monitoring the application.
+* **Manual & Automatic Robot Control** through an intuitive dashboard.
+* **MQTT Message Logging**: Every message is saved to the database for review.
+* **User Management System**: Role-based access control for Admins, Operators, and Viewers.
+* **Go-To Commands**: Issue location-based commands to direct robot movement.
+* **Command & Event Logs**: Track all issued commands and system actions.
+* **Real-Time Monitoring**: View robot status and live updates through WebSocket.
+* **Secure Web Interface**: Accessible from local or remote clients via IP and port.
+
+---
 
 ## Installation
 
-1. Clone the repository:
+1. **Clone the repository**:
 
    ```bash
-   git clone <repository_url>
-   cd <repository_folder>
+   git clone https://github.com/omarbarakota/AMR_Warehouse_System.git
+   cd AMR_Warehouse_System
    ```
 
-2. Create a Python virtual environment:
+2. **Create a Python virtual environment**:
 
    ```bash
    python3 -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. Install dependencies:
+3. **Install dependencies**:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Start the application:
+4. **Run the app**:
 
    ```bash
    python main.py
    ```
 
-5. Access the dashboard at:
+5. **Access the dashboard**:
 
-   ```bash
-   https://localhost:8000
+   ```
+   http://<your-server-ip>:8000
    ```
 
-### Steps to Access a Localhost Server on a Network
+   Replace `<your-server-ip>` with the actual local IP address, e.g., `192.168.1.100`.
 
-#### 1. **Bind the Server to Your Local IP Address**
-
-Instead of binding the server to `localhost`, bind it to your local network IP (e.g., `192.168.x.x`). Here's how:
-
-- Find your local IP:
-  
-  ```bash
-  ip addr show  # Linux
-  ifconfig      # macOS or older Linux
-  ipconfig      # Windows
-  ```
-
-  Look for the IP in the format `192.168.x.x` or `10.x.x.x`.
-
-#### 2. **Generate a Self-Signed SSL Certificate**
-
-If you need HTTPS on a local network, use **mkcert** to generate a self-signed SSL certificate.
-
-- Install mkcert:
-  
-  ```bash
-  sudo apt install mkcert  # Linux
-  brew install mkcert      # macOS
-  choco install mkcert     # Windows
-  ```
-
-- Generate certificates for your local IP:
-  
-  ```bash
-  mkcert 192.168.x.x
-  ```
-
-- You'll get two files: `192.168.x.x.pem` (certificate) and `192.168.x.x-key.pem` (key).
-
-#### 3. **Set Up an HTTPS Server**
-
-Use a lightweight HTTPS server like Python or Node.js.
-
-- **With Python:**
-  
-```bash
-gunicorn wsgi --bind 192.168.x.x:8000 --certfile 192.168.x.x.pem --keyfile 192.168.x.x-key.pem
-```
-
-#### 4. **Access the Server on Other Devices**
-
-- On your PC: Visit `https://192.168.x.x:8000`.
-- On other devices (connected to the same Wi-Fi network): Visit `https://192.168.x.x:8000`.
+   * On **Windows**: Run `ipconfig`
+   * On **Linux/macOS**: Run `ifconfig` or `ip a`
 
 ---
 
-### Notes
-
-- **Self-Signed Certificate Warning**: Devices accessing the site will show a "Not Secure" warning because the certificate is not signed by a recognized authority. You can bypass this by manually trusting the certificate on each device.
-- **Firewall Rules**: Ensure that your firewall allows connections to port 8000 (or whatever port you're using).
-- **Host Entry**: If you want to use a custom domain (like `robot.local`), set it in the `/etc/hosts` file (Linux/Mac) or `C:\Windows\System32\drivers\etc\hosts` (Windows):
-  
-  ```bash
-  192.168.x.x robot.local
-  ```
-
-This way, you can develop and share an HTTPS site across your network securely.
-
 ## Usage
 
-1. **Login:** Access the `/login` route to authenticate.
-2. **Dashboard:** Monitor robot data and location from the main dashboard after logging in.
-3. **API Endpoints:**
-   - GET `/data` to retrieve current robot data.
-   - POST `/update` to update robot data via JSON payloads.
-4. **WebSocket:** Real-time updates are automatically pushed to connected clients.
+1. **Login**: Navigate to `/login` and sign in with your credentials.
+2. **Dashboard**: Control the robot, issue commands, and monitor logs.
+3. **Admin Panel**:
+
+   * Manage users and their roles.
+   * Update home location.
+   * View all logs and MQTT message history.
+4. **Real-Time Communication**: Uses WebSocket and MQTT protocols for responsive updates.
+5. **Metrics**: Available at `/metrics` for Prometheus-based monitoring.
+
+---
 
 ## Folder Structure
 
 ```plaintext
 project/
+├── main.py              # Core Flask app logic
 ├── wsgi.py              # WSGI entry point
-├── venv/                # Virtual environment
-├── static/
-│   ├── scripts.js       # JavaScript logic for WebSockets and Map
-│   └── styles.css       # CSS for styling
-├── templates/
-│   ├── index.html       # Main dashboard page
-│   ├── login.html       # Login page
-├── main.py              # Flask application code
+├── static/              # CSS, JS, fonts, images
+├── templates/           # HTML (Jinja2) templates
+├── tests/               # Automated testing
 ├── requirements.txt     # Python dependencies
+└── run_server           # Launch script
 ```
+
+---
 
 ## Best Practices
 
-1. **Security:**
+1. **Security**
 
-   - Use environment variables to store sensitive data like secret keys and passwords.
-   - Configure HTTPS with a valid SSL certificate for secure communication.
+   * Use `.env` for secrets (not hardcoded).
+   * Run behind HTTPS in production.
+   * Limit login attempts, sanitize inputs.
 
-2. **Code Organization:**
+2. **Code Organization**
 
-   - Follow Flask's recommended blueprint structure for larger applications.
-   - Keep utility functions in separate modules for better maintainability.
+   * Separate concerns (routes, models, services).
+   * Use Blueprints for modularity.
 
-3. **Testing:**
+3. **Testing**
 
-   - Use `pytest` for writing unit tests to ensure code reliability.
-   - Mock external dependencies during testing.
+   * Use `pytest` for unit/integration tests.
+   * Include mocking for external interfaces (MQTT, DB).
 
-4. **Scalability:**
+4. **Deployment**
 
-   - Employ containerization tools like Docker for consistent deployments.
-   - Consider horizontal scaling with tools like Kubernetes.
+   * Containerize with Docker.
+   * Use CI/CD tools for automated testing & deployment.
+
+---
 
 ## Additional Notes
 
-- **Prometheus Integration:** Metrics are available at `/metrics` for monitoring the application's performance.
-- **Geolocation Permissions:** Ensure the browser has geolocation permissions enabled for accurate location tracking.
-- **Dependencies:** Always keep the dependencies updated to avoid security vulnerabilities.
+* **SSL Setup (Optional)**: Use `mkcert` to generate self-signed SSL certificates for development.
+* **Firewall Settings**: Ensure port 8000 is open if you plan to access the app over a local network.
+* **Custom Hostname**: Add a mapping in `/etc/hosts` (Linux/macOS) or `C:\Windows\System32\drivers\etc\hosts` (Windows).
+
+  ```bash
+  192.168.x.x robot.local
+  ```
 
 ---
 
-Developed by Omar Barakat. Feel free to contribute or report issues!
+## Features
+
+* **User Authentication & RBAC**: Role-based login (admin, operator, viewer).
+* **Real-Time Dashboard**: Live robot control and message feedback.
+* **Admin Panel**: Manage users, view MQTT logs, track command history.
+* **MQTT Integration**: Subscribes, publishes, and logs all relevant robot messages.
+* **SQLite Database**: Stores users, messages, commands, logs.
+* **Responsive Design**: Mobile and desktop friendly interface.
+* **Extensive Tests**: For endpoints, RBAC logic, and critical flows.
 
 ---
+
+## Quick Start: Deploying on Another Machine
+
+1. **Clone the repo**:
+
+   ```bash
+   git clone https://github.com/omarbarakota/AMR_Warehouse_System.git
+   cd AMR_Warehouse_System
+   ```
+
+2. **(Optional) Create a virtual environment**:
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run the server**:
+
+   ```bash
+   ./run_server
+   ```
+
+   Then visit:
+   `http://<your-server-ip>:8000`
+   (Replace `<your-server-ip>` with the actual machine IP)
+
+5. **Default Admin Login**:
+
+   * Username: `admin`
+   * Password: `123`
+
+6. **(Optional) Run tests**:
+
+   ```bash
+   ./run_all_tests.sh
+   ```
+
+---
+
+## More Details
+
+* [static/README.md](app/static/README.md): Static file usage
+* [static/js/README.md](app/static/js/README.md): JavaScript responsibilities
+* [static/css/README.md](app/static/css/README.md): CSS structure
+* [templates/README.md](app/templates/README.md): Jinja2 page descriptions
+* [tests/README.md](app/tests/README.md): Test suite overview
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+---
+
+Let me know if you'd like a [clean version formatted as a GitHub Gist](f), or [Dockerfile integration steps](f).
