@@ -1,13 +1,14 @@
 const manualtopic = '/turtle1/cmd_vel';
 
 function moveRobot(topic, message) {
-  client.publish(topic, message, (err) => {
-    if (err) {
-      console.error(`Failed to publish to ${manualtopic}:`, err.message);
-    } else {
-      console.log(`Published to ${manualtopic}:`, message);
-    }
+  fetch('/publish', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ topic, message })
   });
+  // Optionally, still publish directly for real-time UI if needed:
+  // client.publish(topic, message);
+  console.log(`Published to ${topic}:`, message);
 }
 
 // Ensure buttons exist before adding listeners

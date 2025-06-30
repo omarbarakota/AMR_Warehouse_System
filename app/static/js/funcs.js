@@ -2,14 +2,15 @@
 
 // Publish a message
 function publishMessage() {
-    const message = 'Hello from WebSocket Client!'; //String data is being Sent
-    client.publish('/test/topic', message, (err) => {
-      if (err) {
-        console.error('Failed to publish:', err.message);
-      } else {
-        console.log('Published message:', message);
-      }
+    const message = 'Hello from WebSocket Client!';
+    fetch('/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic: '/test/topic', message })
     });
+    // Optionally, still publish directly for real-time UI if needed:
+    // client.publish('/test/topic', message);
+    console.log('Published message:', message);
 }
 
 /*function createPublishButtons(topics) {
