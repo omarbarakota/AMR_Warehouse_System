@@ -6,4 +6,4 @@ Werkzeug
 paho-mqtt
 SQLAlchemy
 pytest
-
+gunicorn
