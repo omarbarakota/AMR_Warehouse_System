@@ -11,10 +11,11 @@ This directory contains all CSS files used for styling the dashboard, admin pane
 - **leaflet.css**: Minified Leaflet CSS for interactive map components.
 
 ## Usage
+
 - All CSS files are loaded via `<link rel="stylesheet">` tags in the relevant HTML templates.
 - Vendor CSS files (Bootstrap, Leaflet, Icons) are only updated via package manager or official sources.
 - Custom styles are in `styles.css` and `manual.css`.
 
 ---
 
-For more details on static assets, see [../README.md](../README.md). 
+For more details on static assets, see [../README.md](../README.md).
