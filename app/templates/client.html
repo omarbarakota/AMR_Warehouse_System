@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robot Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/socket.io.min.js"></script>
+
+</head>
+<body>
+  <h1>Robot Dashboard</h1>
+
+  <div id="robot-data">
+    <div class="data"><strong>Speed:</strong> <span id="speed">Fetching Speed...</span></div>
+    <div class="data"><strong>Status:</strong> <span id="status">Fetching Status...</span></div>
+    <div class="data"><strong>Package Number:</strong> <span id="packageNum">Fetching Package Number...</span></div>
+  </div>
+
+  
+  <div class="button-container">
+    <a href="/logout"><button>Logout</button></a>
+  </div>
+
+</body>
+</html>

@@ -3,32 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manual Robot Control</title>
-  <link rel="stylesheet" href="../static/css/styles.css"> <!-- Updated path -->
-    
+  <title>AMR Control - Manual Operation</title>
+
+  <!-- Local CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- Your custom styles -->
+  
+  <style>
+    body {
+      background: linear-gradient(135deg, #dbe6f6 0%, #c5796d 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #333;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-areas:
+        ". up ."
+        "left stop right"
+        ". down .";
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .controls button {
+      width: 100px;
+      height: 60px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 10px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    .controls button:hover {
+      background-color: #0056b3;
+    }
+
+    #btn-up { grid-area: up; }
+    #btn-down { grid-area: down; }
+    #btn-left { grid-area: left; }
+    #btn-right { grid-area: right; }
+    #btn-stop { grid-area: stop; }
+
+    .back-link {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .btn-back {
+      text-decoration: none;
+      padding: 10px 20px;
+      background-color: #6c757d;
+      color: white;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background-color: #5a6268;
+    }
+  </style>
+
 </head>
 
-
 <body>
-    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-    <script src="{{ url_for('static', filename='js/client.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/manual.js') }}" defer></script>
-    
-  <div class="container">
-    <h1>Manual Robot Control</h1>
 
+  <h1>Manual Robot Control</h1>
 
-    <div class="container">
-      <button class="button up" id="btn-up">↑ Forward</button>
-      <button class="button left" id="btn-left">← Left</button>
-      <button class="button right" id="btn-right">→ Right</button>
-      <button class="button down" id="btn-down">↓ Backward</button>
-    </div>
+  <div class="controls">
+    <button id="btn-up">↑ Forward</button>
+    <button id="btn-left">← Left</button>
+    <button id="btn-stop">■ Stop</button>
+    <button id="btn-right">→ Right</button>
+    <button id="btn-down">↓ Backward</button>
   </div>
 
-  <h4>
-    <a href="/" class="btn btn-back">Back to Home</a>
-  </h4>
-  
+  <div class="back-link">
+    <a href="/" class="btn-back">← Back to Home</a>
+  </div>
+
+  <!-- Local JS files -->
+  <script src="{{ url_for('static', filename='js/mqtt.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/client.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/manual.js') }}" defer></script>
+
 </body>
 </html>
