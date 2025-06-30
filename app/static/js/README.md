@@ -21,10 +21,11 @@ This directory contains all JavaScript files used for frontend interactivity, da
 - **elements.js**: DOM element references and helpers for monitoring and dashboard pages.
 
 ## Usage
+
 - All files are loaded via `<script>` tags in the relevant HTML templates.
 - Most files are modular and only loaded where needed (e.g., `dashboard.js` for the main dashboard, `manual.js` for manual control, etc.).
 - Vendor libraries (minified) are only updated via package manager or official sources.
 
 ---
 
-For more details on static assets, see [../README.md](../README.md). 
+For more details on static assets, see [../README.md](../README.md).
