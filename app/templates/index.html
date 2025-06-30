@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AMR Control Dashboard</title>
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons.css') }}">
+  
   <style>
     body {
       background-color: #0d1117;
@@ -16,98 +17,93 @@
 
     .header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      justify-content: space-between;
+      background: linear-gradient(90deg, #58a6ff 0%, #238636 100%);
+      color: #fff;
+      border-radius: 16px;
+      padding: 2rem 2.5rem 1.5rem 2.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 4px 24px rgba(88,166,255,0.10);
     }
 
-    .header h1 {
-      font-size: 1.5rem;
-      color: #ffffff;
+    .header .header-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .header .header-title i {
+      font-size: 2.5rem;
+      color: #fff;
+    }
+
+    .header-buttons a.btn {
+      background: linear-gradient(90deg, #21262d 0%, #30363d 100%);
+      color: #58a6ff;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1em;
+      box-shadow: 0 2px 8px rgba(88,166,255,0.10);
+      border: none;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+
+    .header-buttons a.btn:hover {
+      background: linear-gradient(90deg, #58a6ff 0%, #238636 100%);
+      color: #fff;
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 4px 16px rgba(88,166,255,0.18);
     }
 
     .dashboard {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.2rem;
+      margin-bottom: 0;
     }
 
-    .dashboard {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+    @media (min-width: 992px) {
+      .dashboard {
+        flex-direction: row;
+        gap: 2.2rem;
+        align-items: flex-start;
+        margin-bottom: 0;
+      }
+      .canvas-container {
+        flex: 2.2;
+        min-width: 0;
+        margin-right: 0.5rem;
+        margin-bottom: 0;
+      }
+      .control-panel {
+        flex: 1.1;
+        min-width: 320px;
+        margin-left: 0.5rem;
+        margin-bottom: 0;
+      }
+    }
 
-@media (min-width: 768px) {
-  .dashboard {
-    flex-direction: row;
-  }
-}
+    .canvas-container, .control-panel {
+      margin-bottom: 1.2rem;
+    }
 
-.action-buttons a {
-  font-size: 0.95rem;
-  padding: 0.6rem 1.2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  border-radius: 8px;
-}
-.status-footer {
-  overflow-x: auto;
-  padding-bottom: 1rem;
-}
+    @media (max-width: 991px) {
+      .dashboard {
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+      .canvas-container, .control-panel {
+        margin-bottom: 1.2rem;
+      }
+    }
 
-.status-bar {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 1rem;
-  justify-content: flex-start;
-  min-width: 100%;
-}
-
-.status-box {
-  flex: 0 0 220px; /* Fixed width for each box */
-  background-color: #21262d;
-  padding: 1rem;
-  border-radius: 6px;
-  text-align: center;
-}
-
-
-  .header-buttons {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-
-  .header h1 {
-    font-size: 1.2rem;
-    text-align: center;
-  }
-
-
-.header-buttons {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.header-buttons a.btn {
-  font-size: 0.9rem;
-  padding: 0.5rem 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.header-buttons a.btn i {
-  font-size: 1rem;
-}
-
-    .canvas-container {
-      flex: 3;
-      background-color: #161b22;
-      border-radius: 8px;
-      padding: 1rem;
+    @media (max-width: 768px) {
+      .dashboard { gap: 0.7rem; }
+      .canvas-container, .control-panel { padding: 1rem 0.5rem; margin-bottom: 0.7rem; }
     }
 
     .canvas-container canvas {
@@ -115,13 +111,6 @@
       border: 1px solid #30363d;
       display: block;
       margin: auto;
-    }
-
-    .control-panel {
-      flex: 1;
-      background-color: #161b22;
-      padding: 1rem;
-      border-radius: 8px;
     }
 
     .control-panel h4 {
@@ -133,6 +122,11 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 0.5rem;
       justify-items: center;
+    }
+
+    .direction-controls {
+      display: block;
+      text-align: center;
     }
 
     .direction-controls button,
@@ -156,15 +150,6 @@
       gap: 0.5rem;
       margin-top: 1rem;
       justify-content: space-between;
-    }
-
-    .status-box {
-      flex: 1;
-      min-width: 48%;
-      background-color: #21262d;
-      padding: 1rem;
-      border-radius: 6px;
-      text-align: center;
     }
 
     .progress {
@@ -208,160 +193,573 @@
       margin-top: 0.5rem;
       background-color: #2f81f7;
     }
+
+    /* Package button styling */
+    #package-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    #package-buttons button {
+      padding: 0.75rem 0.5rem;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border-color: #007bff;
+      color: #007bff;
+    }
+
+    #package-buttons button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      background-color: #007bff;
+      color: white;
+    }
+
+    /* Level-specific styling */
+    /* Removed level-specific styling - all packages now have the same color */
+
+    /* Analog Joystick Styling */
+    .analog-joystick-container {
+      text-align: center;
+      margin: 1rem 0;
+    }
+
+    .analog-joystick {
+      display: inline-block;
+      margin: 1rem 0;
+    }
+
+    .joystick-base {
+      width: 120px;
+      height: 120px;
+      border: 3px solid #30363d;
+      border-radius: 50%;
+      background-color: #21262d;
+      position: relative;
+      margin: 0 auto;
+      cursor: pointer;
+    }
+
+    .joystick-handle {
+      width: 30px;
+      height: 30px;
+      background-color: #007bff;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      cursor: grab;
+      transition: all 0.1s ease;
+    }
+
+    .joystick-handle:active {
+      cursor: grabbing;
+      background-color: #0056b3;
+    }
+
+    .joystick-values {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-around;
+      font-size: 0.9rem;
+      color: #8b949e;
+    }
+
+    /* Manual Controls Styling */
+    .manual-controls {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #21262d;
+      border-radius: 8px;
+    }
+
+    .manual-controls h5 {
+      margin-bottom: 1rem;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .control-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .control-group h6 {
+      margin-bottom: 0.5rem;
+      color: #c9d1d9;
+      font-size: 0.9rem;
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .button-group button {
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      border-radius: 6px;
+    }
+
+    /* Emergency Stop Styling */
+    .emergency-stop {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .emergency-stop button {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .emergency-stop button:hover {
+      background-color: #c82333;
+      border-color: #bd2130;
+      transform: scale(1.05);
+    }
+
+    .emergency-stop button:active {
+      transform: scale(0.95);
+    }
+
+    /* CSS improvements for compact controls */
+    .compact-controls {
+      margin-top: 1.5rem;
+      padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+      background: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .scissor-group, .gripper-group, .gripper-move-group {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .scissor-group .btn, .gripper-group .btn, .gripper-move-group .btn {
+      width: 70px;
+      height: 45px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .emergency-stop {
+      margin-top: 1.5rem;
+    }
+
+    .emergency-stop .btn {
+      font-size: 1rem;
+      padding: 1rem;
+      border-radius: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .control-group h6 {
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Button color coding by function */
+    .btn-map {
+      background: linear-gradient(90deg, #58a6ff 0%, #238636 100%);
+      color: #fff;
+      border: none;
+    }
+    .btn-map:hover {
+      background: linear-gradient(90deg, #238636 0%, #58a6ff 100%);
+      color: #fff;
+    }
+    .btn-move-up, .btn-gripper-on {
+      background: linear-gradient(90deg, #238636 0%, #58a6ff 100%);
+      color: #fff;
+      border: none;
+    }
+    .btn-move-up:hover, .btn-gripper-on:hover {
+      background: #238636;
+      color: #fff;
+    }
+    .btn-move-down, .btn-gripper-off {
+      background: linear-gradient(90deg, #da3633 0%, #f85149 100%);
+      color: #fff;
+      border: none;
+    }
+    .btn-move-down:hover, .btn-gripper-off:hover {
+      background: #da3633;
+      color: #fff;
+    }
+    .btn-move-stop {
+      background: #6e7681;
+      color: #fff;
+      border: none;
+    }
+    .btn-move-stop:hover {
+      background: #484f58;
+      color: #fff;
+    }
+    .btn-gripper-front {
+      background: linear-gradient(90deg, #58a6ff 0%, #0d6efd 100%);
+      color: #fff;
+      border: none;
+    }
+    .btn-gripper-front:hover {
+      background: #0d6efd;
+      color: #fff;
+    }
+    .btn-gripper-back {
+      background: linear-gradient(90deg, #d29922 0%, #ff9800 100%);
+      color: #fff;
+      border: none;
+    }
+    .btn-gripper-back:hover {
+      background: #d29922;
+      color: #fff;
+    }
+    .btn-emergency {
+      background: linear-gradient(90deg, #dc3545 0%, #f85149 100%);
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+    .btn-emergency:hover {
+      background: #c82333;
+      color: #fff;
+    }
+    .btn-return-home {
+      background: linear-gradient(90deg, #58a6ff 0%, #0d6efd 100%);
+      color: #fff;
+      border: none;
+    }
+    .btn-return-home:hover {
+      background: #0d6efd;
+      color: #fff;
+    }
+    @media (max-width: 768px) {
+      .dashboard { flex-direction: column; gap: 1rem; }
+      .header { flex-direction: column; padding: 1.2rem 1rem; }
+      .canvas-container, .control-panel { padding: 1rem 0.5rem; }
+      .manual-controls, .compact-controls { padding: 0.5rem 0.2rem; }
+      .status-bar { flex-direction: column; gap: 1rem; }
+      .status-box { font-size: 1em; }
+      .header-title { font-size: 1.3rem !important; }
+    }
+
+    .permissions-card {
+      background: linear-gradient(135deg, #21262d 80%, #30363d 100%);
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(88,166,255,0.07);
+      border: 1px solid #30363d;
+      padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+      margin-bottom: 2rem;
+      color: #c9d1d9;
+      max-width: 480px;
+    }
+    .permissions-card h5 {
+      color: #58a6ff;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .permissions-card ul {
+      margin: 0 0 0 1.2rem;
+      padding: 0;
+      list-style: disc;
+      color: #c9d1d9;
+      font-size: 1.05em;
+    }
+    .permissions-card li {
+      margin-bottom: 0.4em;
+    }
+    @media (max-width: 768px) {
+      .permissions-card { max-width: 100%; padding: 1rem 0.5rem; }
+    }
+
+    .dashboard-card-group {
+      background: linear-gradient(135deg, #161b22 80%, #21262d 100%);
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(88,166,255,0.10);
+      padding: 2.2rem 1.2rem 2.2rem 1.2rem;
+      margin-bottom: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2.2rem;
+    }
+    @media (min-width: 992px) {
+      .dashboard-card-group {
+        flex-direction: row;
+        gap: 2.2rem;
+        align-items: flex-start;
+        padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+      }
+    }
+
+    .map-card, .control-card, .status-card-group {
+      background: linear-gradient(135deg, #161b22 80%, #21262d 100%);
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(88,166,255,0.10);
+      padding: 2.2rem 1.2rem 2.2rem 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (min-width: 992px) {
+      .dashboard-split {
+        display: flex;
+        gap: 2.2rem;
+        align-items: stretch;
+      }
+      .map-card, .control-card {
+        flex: 1 1 0;
+        min-width: 0;
+        margin-bottom: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .control-card, .status-card-group {
+        margin-bottom: 0;
+      }
+    }
+    @media (max-width: 991px) {
+      .dashboard-split {
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+      .map-card, .control-card, .status-card-group {
+        margin-bottom: 1.2rem;
+      }
+      .status-card-group {
+        margin-top: 0;
+      }
+    }
+    .status-card-group {
+      padding: 1.5rem 1.2rem 1.5rem 1.2rem;
+    }
+    .status-card-group .status-bar {
+      margin-top: 0;
+      gap: 1.2rem;
+    }
+    .status-card-group .status-box {
+      margin-bottom: 0;
+      flex: 1 1 180px;
+    }
+    .status-cards-row {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 2.2rem;
+      margin-bottom: 0;
+    }
+    .status-single-card {
+      background: linear-gradient(135deg, #161b22 80%, #21262d 100%);
+      border-radius: 18px;
+      box-shadow: 0 4px 16px rgba(88,166,255,0.10);
+      padding: 1.5rem 1.2rem 1.5rem 1.2rem;
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    @media (max-width: 991px) {
+      .status-cards-row {
+        flex-direction: column;
+        gap: 1.2rem;
+        margin-top: 1.2rem;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>AMR Control Dashboard</h1>
+    <div class="header-title">
+      <i class="bi bi-cpu"></i>
+      AMR Control Dashboard
+    </div>
     <div class="header-buttons">
-      <a href="/data" class="btn btn-outline-info">
+      {% if role in ['operator', 'admin'] %}
+      <!-- <a href="/data" class="btn btn-outline-info">
         <i class="bi bi-graph-up"></i> Monitoring
+      </a> -->
+      <a href="/database" class="btn btn-outline-success">
+        <i class="bi bi-database"></i> Database
       </a>
+      {% endif %}
+      {% if role == 'admin' %}
+      <a href="/admin" class="btn btn-outline-warning">
+        <i class="bi bi-gear"></i> Admin
+      </a>
+      {% endif %}
       <a href="/logout" class="btn btn-outline-danger">
         <i class="bi bi-power"></i> Logout
       </a>
     </div>
   </div>
     
-
+  <!-- Main Dashboard Split: Map | Robot Control -->
   <div class="container-fluid px-3">
-      <!-- Top Section: Map + Control Panel -->
-      <div class="dashboard">
-        <!-- MAP & STATUS -->
-        <div class="canvas-container">
-          <canvas id="mapCanvas" width="600" height="500"></canvas>
+    <div class="dashboard-split">
+      <div class="map-card">
+        <div class="canvas-container" style="background: none; box-shadow: none; padding: 0; margin: 0; height: 100%; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
+            <h3 style="margin-bottom: 2rem; color: #58a6ff;">Interactive Map</h3>
+            <p style="margin-bottom: 2rem; color: #8b949e;">Click the button below to access the interactive map interface</p>
+            <a href="http://localhost:5000" target="_blank" class="btn btn-map btn-lg" style="padding: 1rem 2rem; font-size: 1.2rem;">
+              <i class="bi bi-map"></i> Open Interactive Map
+            </a>
+          </div>
         </div>
-    
-        <!-- CONTROL PANEL -->
-        <div class="control-panel">
+      </div>
+      <div class="control-card">
+        {% if can_control %}
+        <div class="control-panel" style="background: none; box-shadow: none; padding: 0; margin: 0; height: 100%; flex: 1; display: flex; flex-direction: column;">
           <h4>Robot Control</h4>
           <div class="btn-group mb-3 w-100" role="group">
             <button id="btn-movement" class="btn btn-outline-primary btn-toggle active">Movement</button>
             <button id="btn-operations" class="btn btn-outline-secondary btn-toggle">Operations</button>
           </div>
-    
+  
           <!-- Movement Controls -->
           <div class="direction-controls" id="movement-controls">
-            <div></div>
-            <button id="btn-up">&uarr;</button>
-            <div></div>
-            <button id="btn-left">&larr;</button>
-            <button id="btn-stop" class="stop">&#9632;</button>
-            <button id="btn-right">&rarr;</button>
-            <div></div>
-            <button id="btn-down">&darr;</button>
-            <div></div>
+            <div class="analog-joystick-container">
+              <div class="analog-joystick">
+                <div class="joystick-base">
+                  <div class="joystick-handle" id="joystick-handle"></div>
+                </div>
+                <div class="joystick-values">
+                  <span>X: <span id="x-value">0.00</span></span>
+                  <span>Z: <span id="z-value">0.00</span></span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Scissor Lift & Gripper Controls Grouped -->
+            <div class="manual-controls compact-controls">
+              <!-- Scissor Lift Controls -->
+              <div class="control-group mb-3">
+                <h6 class="text-center mb-2">Scissor Lift</h6>
+                <div class="button-group scissor-group">
+                  <button class="btn btn-move-up btn-lg" title="Up" onclick="sendLiftCommand('liftup')">
+                    Up
+                  </button>
+                  <button class="btn btn-move-down btn-lg" title="Down" onclick="sendLiftCommand('liftdown')">
+                    Down
+                  </button>
+                  <button class="btn btn-move-stop btn-lg" title="Stop" onclick="sendLiftCommand('liftstop')">
+                    Stop
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Gripper Movement Controls -->
+              <div class="control-group mb-3">
+                <h6 class="text-center mb-2">Gripper Movement</h6>
+                <div class="button-group gripper-move-group">
+                  <button class="btn btn-gripper-front btn-lg" title="Front" onclick="sendGripperMoveCommand('gripperfront')">
+                    Front
+                  </button>
+                  <button class="btn btn-gripper-back btn-lg" title="Back" onclick="sendGripperMoveCommand('gripperback')">
+                    Back
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Gripper Controls -->
+              <div class="control-group mb-3">
+                <h6 class="text-center mb-2">Gripper</h6>
+                <div class="button-group gripper-group">
+                  <button class="btn btn-gripper-on btn-lg" title="On" onclick="sendGripperCommand('gripperon')">
+                    On
+                  </button>
+                  <button class="btn btn-gripper-off btn-lg" title="Off" onclick="sendGripperCommand('gripperoff')">
+                    Off
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Emergency Stop -->
+              <div class="emergency-stop mt-4">
+                <button class="btn btn-emergency btn-lg w-100" onclick="sendEmergencyStop()">
+                  <i class="bi bi-exclamation-triangle"></i> EMERGENCY STOP
+                </button>
+              </div>
+            </div>
           </div>
-    
+  
           <!-- Operation Controls -->
           <div class="operation-controls" id="operation-controls">
-            <button class="btn btn-outline-success"><i class="bi bi-play-fill"></i> Start Task</button>
-            <button class="btn btn-outline-warning"><i class="bi bi-pause-fill"></i> Pause Task</button>
-            <button class="btn btn-outline-info"><i class="bi bi-play"></i> Resume Task</button>
-            <button class="btn btn-outline-danger"><i class="bi bi-exclamation-circle"></i> Cancel Task</button>
-            <button class="btn btn-primary return-home"><i class="bi bi-house"></i> Return Home</button>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Bottom Buttons: Monitoring & Disconnect -->
-      <div class="status-footer mt-4">
-        <div class="status-bar">
-          <div class="status-box">
-            <div><i class="bi bi-battery-half"></i> Battery</div>
-            <div class="progress">
-              <div class="progress-bar" style="width: 78%;"></div>
+            <div id="package-buttons">
+              <!-- Package buttons will be loaded dynamically -->
             </div>
-            <div>78%</div>
-          </div>
-          <div class="status-box">
-            <div><i class="bi bi-wifi"></i> Connection</div>
-            <span class="badge bg-success">Connected</span>
-          </div>
-          <div class="status-box">
-            <div><i class="bi bi-list-task"></i> Current Task</div>
-            <div><strong>Idle</strong></div>
-          </div>
-          <div class="status-box">
-            <div><i class="bi bi-activity"></i> Status</div>
-            <span class="badge bg-success">Operational</span>
+            <button class="btn btn-return-home return-home" onclick="sendGoal('home').catch(console.error)"><i class="bi bi-house"></i> Return Home</button>
           </div>
         </div>
+        {% else %}
+        <div class="control-panel" style="background: none; box-shadow: none; padding: 0; margin: 0; height: 100%; flex: 1; display: flex; flex-direction: column;">
+          <h4>Robot Status</h4>
+          <p class="text-muted">You have view-only access. Contact an administrator for control permissions.</p>
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            <strong>Viewer Mode:</strong> You can monitor the robot's position and status, but cannot control it.
+          </div>
+        </div>
+        {% endif %}
       </div>
-      
-    
+    </div>
+    <div class="status-cards-row">
+      <div class="status-single-card">
+        <div><i class="bi bi-battery-half"></i> Battery</div>
+        <div class="progress" style="width: 100%; max-width: 120px; margin: 0.7rem auto 0.5rem auto;">
+          <div class="progress-bar" style="width: 78%;"></div>
+        </div>
+        <div>78%</div>
+      </div>
+      <div class="status-single-card">
+        <div><i class="bi bi-wifi"></i> Connection</div>
+        <span class="badge bg-success" style="margin-top: 0.7rem;">Connected</span>
+      </div>
+      <div class="status-single-card">
+        <div><i class="bi bi-list-task"></i> Current Task</div>
+        <div style="margin-top: 0.7rem;"><strong>Idle</strong></div>
+      </div>
+      <div class="status-single-card">
+        <div><i class="bi bi-activity"></i> Status</div>
+        <span class="badge bg-success" style="margin-top: 0.7rem;">Operational</span>
+      </div>
+    </div>
+  </div>
+  
   <!-- Local JS files -->
   <script src="{{ url_for('static', filename='js/mqtt.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/client.js') }}" defer></script>
-  <script src="{{ url_for('static', filename='js/manual.js') }}" defer></script>
-
-  <script>
-    document.getElementById("btn-movement").onclick = function () {
-      document.getElementById("movement-controls").style.display = "grid";
-      document.getElementById("operation-controls").classList.remove("active");
-      this.classList.add("active");
-      document.getElementById("btn-operations").classList.remove("active");
-    };
-
-    document.getElementById("btn-operations").onclick = function () {
-      document.getElementById("movement-controls").style.display = "none";
-      document.getElementById("operation-controls").classList.add("active");
-      this.classList.add("active");
-      document.getElementById("btn-movement").classList.remove("active");
-    };
-  </script>
-
-  <script src="/static/js/mqtt.min.js"></script>
-  <script>
-    const canvas = document.getElementById("mapCanvas");
-    const ctx = canvas.getContext("2d");
-
-    const mapImg = new Image();
-    const robotImg = new Image();
-
-    mapImg.src = "/static/img/map.png";
-    robotImg.src = "/static/img/robot.png";
-
-    let robotPose = { x: 0, y: 0, theta: 0 };
-
-    const protocol = location.protocol === "https:" ? "wss" : "ws";
-    const host = location.hostname;
-
-    const client = mqtt.connect(`${protocol}://${host}:9001`, {
-      clientId: 'web_client_' + Math.random().toString(16).slice(2)
-    });
-    client.on("connect", () => {
-      console.log("Connected to MQTT broker via WebSocket");
-      client.subscribe("/robot/pose");
-    });
-
-    client.on("message", (topic, message) => {
-      if (topic === "/robot/pose") {
-        try {
-          const data = JSON.parse(message.toString());
-          robotPose.x = (data.x / 11) * canvas.width;
-          robotPose.y = canvas.height - (data.y / 11) * canvas.height;
-          robotPose.theta = data.theta;
-          drawScene();
-        } catch (err) {
-          console.error("Failed to parse pose data", err);
-        }
-      }
-    });
-
-    function drawScene() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(mapImg, 0, 0, canvas.width, canvas.height);
-
-      ctx.save();
-      ctx.translate(robotPose.x, robotPose.y);
-      ctx.rotate(-robotPose.theta);
-      ctx.drawImage(robotImg, -20, -20, 40, 40);
-      ctx.restore();
-    }
-
-    mapImg.onload = drawScene;
-    robotImg.onload = drawScene;
-  </script>
+  <script src="{{ url_for('static', filename='js/client.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>

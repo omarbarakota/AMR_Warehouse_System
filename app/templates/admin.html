@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Database Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons.css') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background-color: #161b22;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #21262d;
+            color: #ffffff;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            color: #8b949e;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background-color: #21262d;
+            border-bottom: 1px solid #30363d;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 20px;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #8b949e;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab:hover {
+            background-color: #30363d;
+            color: #c9d1d9;
+        }
+        
+        .nav-tab.active {
+            background-color: #161b22;
+            color: #58a6ff;
+            border-bottom: 3px solid #58a6ff;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            background-color: #161b22;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .data-section {
+            margin-bottom: 48px;
+            background: linear-gradient(135deg, #161b22 80%, #21262d 100%);
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(88,166,255,0.04);
+            padding: 32px 18px 24px 18px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #58a6ff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title .bi {
+            font-size: 1.3em;
+            color: #58a6ff;
+            margin-right: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #238636;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2ea043;
+        }
+
+        .btn-success {
+            background-color: #238636;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #2ea043;
+        }
+
+        .btn-warning {
+            background-color: #d29922;
+            color: #ffffff;
+        }
+
+        .btn-warning:hover {
+            background-color: #e3b341;
+        }
+
+        .btn-danger {
+            background-color: #da3633;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #f85149;
+        }
+
+        .btn-secondary {
+            background-color: #30363d;
+            color: #c9d1d9;
+        }
+
+        .btn-secondary:hover {
+            background-color: #484f58;
+        }
+
+        .btn-outline-primary {
+            background-color: transparent;
+            color: #58a6ff;
+            border: 1px solid #58a6ff;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #58a6ff;
+            color: #0d1117;
+        }
+
+        .btn-outline-success {
+            background-color: transparent;
+            color: #238636;
+            border: 1px solid #238636;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #238636;
+            color: #ffffff;
+        }
+
+        .btn-outline-warning {
+            background-color: transparent;
+            color: #d29922;
+            border: 1px solid #d29922;
+        }
+
+        .btn-outline-warning:hover {
+            background-color: #d29922;
+            color: #0d1117;
+        }
+
+        .btn-outline-danger {
+            background-color: transparent;
+            color: #da3633;
+            border: 1px solid #da3633;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #da3633;
+            color: #ffffff;
+        }
+
+        .btn-outline-info {
+            background-color: transparent;
+            color: #58a6ff;
+            border: 1px solid #58a6ff;
+        }
+
+        .btn-outline-info:hover {
+            background-color: #58a6ff;
+            color: #0d1117;
+        }
+
+        .table-container {
+            background-color: #21262d;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.18);
+            overflow-x: auto;
+            margin-bottom: 20px;
+            border: 1px solid #30363d;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: none;
+        }
+
+        .data-table th {
+            background-color: #30363d;
+            color: #fff;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 15px;
+            border-bottom: 1px solid #484f58;
+        }
+
+        .data-table td {
+            padding: 12px 12px;
+            border-bottom: 1px solid #30363d;
+            font-size: 15px;
+            color: #c9d1d9;
+            vertical-align: middle;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background-color: #23272e;
+            transition: background 0.2s;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            display: inline-block;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .badge-admin { background: #da3633; color: #fff; }
+        .badge-user { background: #238636; color: #fff; }
+        .badge-active { background: #238636; color: #fff; }
+        .badge-inactive { background: #6e7681; color: #fff; }
+        .badge-info { background: #58a6ff; color: #0d1117; }
+        .badge-warning { background: #d29922; color: #0d1117; }
+        .badge-danger { background: #da3633; color: #fff; }
+        .badge-success { background: #238636; color: #fff; }
+        .badge-sent { background: #58a6ff; color: #0d1117; }
+        .badge-received { background: #238636; color: #fff; }
+        .badge-error { background: #da3633; color: #fff; }
+        .timestamp { color: #8b949e; font-size: 13px; }
+        .message-preview { max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .form-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+        }
+
+        .modal-content {
+            background-color: #161b22;
+            color: #c9d1d9;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid #30363d;
+        }
+
+        .close {
+            color: #8b949e;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #c9d1d9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #c9d1d9;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #30363d;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: #30363d;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #21262d 60%, #30363d 100%);
+            color: #c9d1d9;
+            padding: 32px 24px 24px 24px;
+            border-radius: 16px;
+            text-align: left;
+            border: 1px solid #30363d;
+            box-shadow: 0 2px 12px rgba(88,166,255,0.07);
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .stat-card:hover {
+            box-shadow: 0 8px 32px rgba(88,166,255,0.18);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .stat-icon {
+            font-size: 2.2em;
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            opacity: 0.18;
+            pointer-events: none;
+        }
+        .stat-number {
+            font-size: 2.6em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #58a6ff;
+            letter-spacing: 1px;
+        }
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.92;
+            color: #8b949e;
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+        .data-management-card {
+            background: linear-gradient(135deg, #21262d 60%, #30363d 100%);
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(88,166,255,0.07);
+            border: 1px solid #30363d;
+            padding: 24px 18px 18px 18px;
+            margin-bottom: 0;
+            margin-top: 18px;
+            text-align: left;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .data-management-card h3 {
+            color: #58a6ff;
+            margin-bottom: 8px;
+            font-size: 1.2em;
+        }
+        .data-management-card p {
+            color: #8b949e;
+            margin-bottom: 12px;
+        }
+        .data-management-card .btn {
+            margin-top: 8px;
+        }
+        .data-management-card input[type='number'] {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            padding: 4px;
+            width: 80px;
+            margin-right: 10px;
+        }
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-section { padding: 18px 4px; }
+            .data-table th, .data-table td { font-size: 12px; padding: 8px 6px; }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .stat-card, .data-management-card { padding: 18px 8px; }
+        }
+
+        /* Enhanced Add/Edit Package Modal */
+        #packageModal .modal-content {
+            background: linear-gradient(135deg, #161b22 80%, #21262d 100%);
+            color: #c9d1d9;
+            border-radius: 18px;
+            border: 1.5px solid #30363d;
+            box-shadow: 0 8px 32px rgba(88,166,255,0.18);
+            padding: 0;
+        }
+        #packageModal .modal-header {
+            background: linear-gradient(90deg, #58a6ff 0%, #238636 100%);
+            color: #fff;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+            border-bottom: 1px solid #30363d;
+            padding: 22px 28px 16px 28px;
+            align-items: center;
+        }
+        #packageModal .modal-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #packageModal .modal-title .bi {
+            font-size: 1.3em;
+            color: #fff;
+        }
+        #packageModal .btn-close {
+            filter: invert(1);
+            opacity: 0.8;
+        }
+        #packageModal .modal-body {
+            padding: 32px 28px 28px 28px;
+        }
+        #packageForm .form-label {
+            color: #8b949e;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        #packageForm .form-control, #packageForm .form-select {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            border: 1.5px solid #30363d;
+            border-radius: 8px;
+            font-size: 1.1em;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        #packageForm .form-control:focus, #packageForm .form-select:focus {
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 2px rgba(88,166,255,0.12);
+            outline: none;
+        }
+        #packageForm button[type='submit'] {
+            background: linear-gradient(90deg, #58a6ff 0%, #238636 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            margin-top: 10px;
+            box-shadow: 0 2px 8px rgba(88,166,255,0.10);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+        #packageForm button[type='submit']:hover {
+            background: linear-gradient(90deg, #238636 0%, #58a6ff 100%);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(88,166,255,0.18);
+            transform: translateY(-2px) scale(1.03);
+        }
+        #packageFeedback {
+            font-size: 1em;
+            color: #da3633;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .add-package-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(90deg, #58a6ff 0%, #238636 100%);
+            color: #fff !important;
+            font-weight: 700;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 28px 12px 20px;
+            box-shadow: 0 4px 16px rgba(88,166,255,0.15);
+            margin-bottom: 24px;
+            margin-top: 8px;
+            margin-left: auto;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .add-package-btn:hover {
+            background: linear-gradient(90deg, #238636 0%, #58a6ff 100%);
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(88,166,255,0.25);
+            transform: translateY(-2px) scale(1.03);
+        }
+        @media (max-width: 768px) {
+            .add-package-btn { width: 100%; justify-content: center; font-size: 1em; padding: 12px 0; }
+        }
+        .admin-sections-row {
+            display: flex;
+            gap: 2.2rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 991px) {
+            .admin-sections-row {
+                flex-direction: column;
+                gap: 1.2rem;
+            }
+        }
+        .home-card {
+            background: linear-gradient(135deg, #161b22 80%, #21262d 100%);
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(88,166,255,0.10);
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            min-width: 320px;
+            max-width: 400px;
+            flex: 1 1 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+        .home-card h3 {
+            color: #58a6ff;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .home-card label {
+            color: #8b949e;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        .home-card input {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            border: 1.5px solid #30363d;
+            border-radius: 8px;
+            font-size: 1.1em;
+            padding: 8px 12px;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+        .home-card button {
+            background: linear-gradient(90deg, #58a6ff 0%, #238636 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            width: 100%;
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 8px rgba(88,166,255,0.10);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+        .home-card button:hover {
+            background: linear-gradient(90deg, #238636 0%, #58a6ff 100%);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(88,166,255,0.18);
+            transform: translateY(-2px) scale(1.03);
+        }
+        #homeFeedback {
+            font-size: 1em;
+            color: #da3633;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .mqtt-filter-group {
+            display: flex;
+            gap: 0.7rem;
+            margin-bottom: 1.2rem;
+        }
+        .mqtt-filter-btn {
+            background: linear-gradient(90deg, #21262d 0%, #30363d 100%);
+            color: #58a6ff;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1em;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+        .mqtt-filter-btn.active, .mqtt-filter-btn:focus {
+            background: linear-gradient(90deg, #58a6ff 0%, #238636 100%);
+            color: #fff;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-btn">← Back to Dashboard</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Admin Database Management</h1>
+            <p>Manage all database content - Users, Packages, MQTT Messages, System Logs, and Sensor Data</p>
+            <div style="margin-top: 15px;">
+                <a href="/users" class="btn btn-outline-primary">
+                    <i class="bi bi-people"></i> User Management
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('overview')">Overview</button>
+            <button class="nav-tab" onclick="showTab('packages')">Packages</button>
+            <button class="nav-tab" onclick="showTab('home-location')">Home Position</button>
+            <button class="nav-tab" onclick="showTab('mqtt')">MQTT Messages</button>
+            <button class="nav-tab" onclick="showTab('logs')">System Logs</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="data-section">
+                <h2 class="section-title">📈 Database Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-icon"><i class="bi bi-people-fill"></i></span>
+                        <div class="stat-number">{{ users|length }}</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon"><i class="bi bi-box-seam"></i></span>
+                        <div class="stat-number">{{ packages|length }}</div>
+                        <div class="stat-label">Total Packages</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon"><i class="bi bi-broadcast"></i></span>
+                        <div class="stat-number">{{ mqtt_messages|length }}</div>
+                        <div class="stat-label">MQTT Messages</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon"><i class="bi bi-clipboard-data"></i></span>
+                        <div class="stat-number">{{ system_logs|length }}</div>
+                        <div class="stat-label">System Logs</div>
+                    </div>
+                </div>
+            </div>
+            <div class="data-section">
+                <h2 class="section-title"><i class="bi bi-tools"></i> Data Management</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 18px;">
+                    <div class="data-management-card">
+                        <h3><i class="bi bi-broadcast"></i> MQTT Messages</h3>
+                        <p>Delete all MQTT message history</p>
+                        <button class="btn btn-danger" onclick="deleteAllData('mqtt-messages')"><i class="bi bi-trash"></i> Delete All MQTT Messages</button>
+                    </div>
+                    <div class="data-management-card">
+                        <h3><i class="bi bi-clipboard-data"></i> System Logs</h3>
+                        <p>Delete all system activity logs</p>
+                        <button class="btn btn-danger" onclick="deleteAllData('system-logs')"><i class="bi bi-trash"></i> Delete All System Logs</button>
+                    </div>
+                    <div class="data-management-card">
+                        <h3><i class="bi bi-clock-history"></i> Old Data</h3>
+                        <p>Delete data older than specified days</p>
+                        <input type="number" id="daysToDelete" value="7" min="1" max="365">
+                        <button class="btn btn-warning" onclick="deleteOldData()"><i class="bi bi-trash"></i> Delete Old Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Sections Row: Packages | Home Position -->
+        <div class="admin-sections-row">
+            <div style="flex: 2 1 0; min-width: 0;">
+                <!-- Packages section (existing code) -->
+                <div id="packages" class="tab-content active">
+                    <div class="data-section">
+                        <h2 class="section-title"><i class="bi bi-box-seam"></i> Packages</h2>
+                        <div style="display: flex; justify-content: flex-end; align-items: center;">
+                            <button class="add-package-btn" onclick="showAddPackageForm()">
+                                <i class="bi bi-plus-circle"></i> Add Package
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table" id="packagesTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Package ID</th>
+                                        <th>Name</th>
+                                        <th>X</th>
+                                        <th>Y</th>
+                                        <th>Theta</th>
+                                        <th>Level</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for pkg in packages %}
+                                    <tr data-id="{{ pkg.id }}">
+                                        <td>{{ pkg.id }}</td>
+                                        <td>{{ pkg.package_id }}</td>
+                                        <td>{{ pkg.name }}</td>
+                                        <td>{{ pkg.x or pkg.x_coordinate }}</td>
+                                        <td>{{ pkg.y or pkg.y_coordinate }}</td>
+                                        <td>{{ pkg.theta or pkg.theta_coordinate }}</td>
+                                        <td><span class="badge badge-info">{{ pkg.level }}</span></td>
+                                        <td>
+                                            <span class="badge {{ 'badge-active' if pkg.is_active else 'badge-inactive' }}">
+                                                {{ 'Active' if pkg.is_active else 'Inactive' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-outline-success btn-sm" title="Toggle Active" onclick="toggleActive({{ pkg.id }}, {{ 'false' if pkg.is_active else 'true' }})">
+                                                <i class="bi bi-toggle-{{ 'on' if pkg.is_active else 'off' }}"></i>
+                                            </button>
+                                            <button class="btn btn-primary btn-sm" title="Edit" onclick="editPackage({{ pkg.id }})">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm" title="Delete" onclick="deletePackage({{ pkg.id }})">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+
+
+        <!-- Home Position Tab --> 
+        <div id="home-location" class="tab-content">
+            <div class="home-card">
+                <h3><i class="bi bi-house"></i> Home Position</h3>
+                <form id="homeForm">
+                    <label for="home-x">X</label>
+                    <input type="number" step="any" id="home-x" required>
+                    <label for="home-y">Y</label>
+                    <input type="number" step="any" id="home-y" required>
+                    <label for="home-theta">Theta</label>
+                    <input type="number" step="any" id="home-theta" required>
+                    <label for="home-level">Level</label>
+                    <input type="number" id="home-level" min="1" max="3" required>
+                    <div id="homeFeedback" class="text-danger mb-2"></div>
+                    <button type="submit">Update Home Position</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MQTT Messages Tab -->
+        <div id="mqtt" class="tab-content">
+            <div class="data-section">
+                <h2 class="section-title"><i class="bi bi-broadcast"></i> MQTT Messages</h2>
+                <div class="mqtt-filter-group">
+                    <button class="mqtt-filter-btn active" data-type="all" onclick="filterMqttMessages(event, 'all')">All</button>
+                    <button class="mqtt-filter-btn" data-type="published" onclick="filterMqttMessages(event, 'published')">Published</button>
+                    <button class="mqtt-filter-btn" data-type="received" onclick="filterMqttMessages(event, 'received')">Received</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="mqttMessagesTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Topic</th>
+                                <th>Message</th>
+                                <th>Type</th>
+                                <th>User</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mqttMessagesTableBody">
+                            <!-- MQTT messages will be loaded here by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Logs Tab -->
+        <div id="logs" class="tab-content">
+            <div class="data-section">
+                <h2 class="section-title"><i class="bi bi-clipboard-data"></i> System Logs</h2>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Level</th>
+                                <th>Message</th>
+                                <th>User</th>
+                                <th>IP Address</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in system_logs %}
+                            <tr>
+                                <td>{{ log.id }}</td>
+                                <td><span class="badge badge-{{ log.level.lower() }}">{{ log.level }}</span></td>
+                                <td class="message-preview" title="{{ log.message }}">{{ log.message }}</td>
+                                <td>{{ log.user.username if log.user else 'System' }}</td>
+                                <td>{{ log.ip_address or 'N/A' }}</td>
+                                <td class="timestamp">{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Enhanced Add/Edit Package Modal -->
+    <div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="packageModalLabel"><i class="bi bi-box-seam"></i> Add/Edit Package</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="packageForm">
+              <input type="hidden" id="packageId">
+              <div class="mb-3">
+                <label for="pkg-package_id" class="form-label">Package ID</label>
+                <input type="text" class="form-control" id="pkg-package_id" required>
+              </div>
+              <div class="mb-3">
+                <label for="pkg-name" class="form-label">Package Name</label>
+                <input type="text" class="form-control" id="pkg-name" required>
+              </div>
+              <div class="mb-3">
+                <label for="pkg-x" class="form-label">X-Coordinate</label>
+                <input type="number" step="any" class="form-control" id="pkg-x" required>
+              </div>
+              <div class="mb-3">
+                <label for="pkg-y" class="form-label">Y-Coordinate</label>
+                <input type="number" step="any" class="form-control" id="pkg-y" required>
+              </div>
+              <div class="mb-3">
+                <label for="pkg-theta" class="form-label">Theta</label>
+                <input type="number" step="any" class="form-control" id="pkg-theta" required>
+              </div>
+              <div class="mb-3">
+                <label for="pkg-level" class="form-label">Level</label>
+                <select class="form-select" id="pkg-level">
+                  <option value="level1">Level 1</option>
+                  <option value="level2">Level 2</option>
+                  <option value="level3">Level 3</option>
+                </select>
+              </div>
+              <div id="packageFeedback" class="text-danger mb-2" style="display:none;"></div>
+              <button type="submit" class="btn btn-primary w-100">Save Package</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='bootstrap/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Show modal for adding a package
+        function showAddPackageForm() {
+            document.getElementById('packageModalLabel').textContent = 'Add Package';
+            document.getElementById('packageForm').reset();
+            document.getElementById('packageId').value = '';
+            document.getElementById('packageFeedback').style.display = 'none';
+            var modal = new bootstrap.Modal(document.getElementById('packageModal'));
+            modal.show();
+        }
+
+        // Show modal for editing a package
+        function editPackage(packageId) {
+            fetch(`/api/packages/${packageId}`)
+                .then(response => response.json())
+                .then(pkg => {
+                    document.getElementById('packageModalLabel').textContent = 'Edit Package';
+                    document.getElementById('packageId').value = pkg.id;
+                    document.getElementById('pkg-package_id').value = pkg.package_id;
+                    document.getElementById('pkg-name').value = pkg.name;
+                    document.getElementById('pkg-x').value = pkg.x_coordinate;
+                    document.getElementById('pkg-y').value = pkg.y_coordinate;
+                    document.getElementById('pkg-theta').value = pkg.theta_coordinate;
+                    document.getElementById('pkg-level').value = pkg.level;
+                    document.getElementById('packageFeedback').style.display = 'none';
+                    var modal = new bootstrap.Modal(document.getElementById('packageModal'));
+                    modal.show();
+                });
+        }
+
+        // Handle add/edit form submission
+        const packageForm = document.getElementById('packageForm');
+        if (packageForm) {
+            packageForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const feedback = document.getElementById('packageFeedback');
+                feedback.style.display = 'none';
+                const packageId = document.getElementById('packageId').value;
+                const data = {
+                    package_id: document.getElementById('pkg-package_id').value,
+                    name: document.getElementById('pkg-name').value,
+                    x_coordinate: document.getElementById('pkg-x').value,
+                    y_coordinate: document.getElementById('pkg-y').value,
+                    theta_coordinate: document.getElementById('pkg-theta').value,
+                    level: document.getElementById('pkg-level').value
+                };
+                const url = packageId ? `/api/packages/${packageId}` : '/api/packages';
+                const method = packageId ? 'PUT' : 'POST';
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        bootstrap.Modal.getInstance(document.getElementById('packageModal')).hide();
+                        alert('Package saved successfully!');
+                        location.reload();
+                    } else {
+                        feedback.textContent = result.message || 'Failed to save package.';
+                        feedback.style.display = 'block';
+                    }
+                } catch (err) {
+                    feedback.textContent = 'Error: ' + err.message;
+                    feedback.style.display = 'block';
+                }
+            });
+        }
+
+        // Data deletion functions
+        function deleteAllData(type) {
+            const confirmMessage = `Are you sure you want to delete all ${type.replace('-', ' ')}? This action cannot be undone.`;
+            if (confirm(confirmMessage)) {
+                fetch(`/api/admin/delete-${type}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+            }
+        }
+
+        function deleteOldData() {
+            const days = document.getElementById('daysToDelete').value;
+            const confirmMessage = `Are you sure you want to delete all data older than ${days} days? This action cannot be undone.`;
+            
+            if (confirm(confirmMessage)) {
+                fetch('/api/admin/delete-old-data', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ days: parseInt(days) })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('packageModal');
+            if (event.target === modal) {
+                closePackageModal();
+            }
+        }
+
+        // Auto-refresh data every 30 seconds
+        setInterval(() => {
+            if (document.getElementById('overview').classList.contains('active')) {
+                location.reload();
+            }
+        }, 30000);
+
+        // Toggle active/inactive status
+        function toggleActive(packageId, newStatus) {
+            fetch(`/api/packages/${packageId}/toggle-active`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ is_active: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Status updated!');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            });
+        }
+
+        function deletePackage(packageId) {
+            if (confirm('Are you sure you want to delete this package?')) {
+                fetch(`/api/packages/${packageId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Package deleted successfully');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch and populate home position
+            fetch('/api/home-location')
+                .then(res => res.json())
+                .then(home => {
+                    document.getElementById('home-x').value = home.x;
+                    document.getElementById('home-y').value = home.y;
+                    document.getElementById('home-theta').value = home.theta;
+                    document.getElementById('home-level').value = home.level || 1;
+                });
+
+            document.getElementById('homeForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const feedback = document.getElementById('homeFeedback');
+                feedback.style.display = 'none';
+                const data = {
+                    x_coordinate: parseFloat(document.getElementById('home-x').value),
+                    y_coordinate: parseFloat(document.getElementById('home-y').value),
+                    theta_coordinate: parseFloat(document.getElementById('home-theta').value),
+                    level: parseInt(document.getElementById('home-level').value)
+                };
+                try {
+                    const response = await fetch('/api/admin/home-location', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        feedback.textContent = 'Home position updated!';
+                        feedback.style.color = '#238636';
+                        feedback.style.display = 'block';
+                    } else {
+                        feedback.textContent = result.message || 'Failed to update home position.';
+                        feedback.style.color = '#da3633';
+                        feedback.style.display = 'block';
+                    }
+                } catch (err) {
+                    feedback.textContent = 'Error: ' + err.message;
+                    feedback.style.color = '#da3633';
+                    feedback.style.display = 'block';
+                }
+            });
+        });
+
+        async function loadMqttMessages(type = 'all') {
+            const tbody = document.getElementById('mqttMessagesTableBody');
+            tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+            try {
+                const response = await fetch(`/api/mqtt-messages?type=${type}`);
+                const messages = await response.json();
+                if (messages.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6">No messages found.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = '';
+                messages.forEach(msg => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${msg.id}</td>
+                            <td>${msg.topic}</td>
+                            <td class="message-preview" title="${msg.message}">${msg.message}</td>
+                            <td><span class="badge badge-info">${msg.message_type}</span></td>
+                            <td>${msg.user || 'System'}</td>
+                            <td class="timestamp">${msg.timestamp}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-danger">Error loading messages.</td></tr>`;
+            }
+        }
+
+        function filterMqttMessages(event, type) {
+            document.querySelectorAll('.mqtt-filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            loadMqttMessages(type);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMqttMessages('all');
+        });
+    </script>
+</body>
+</html> 
