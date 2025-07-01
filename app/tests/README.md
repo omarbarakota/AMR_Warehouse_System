@@ -29,4 +29,4 @@ PYTHONPATH=. pytest app/tests
 
 ---
 
-For more details on the backend and app structure, see the main [README.md](../../README.md). 
+For more details on the backend and app structure, see the main [README.md](../../README.md).
