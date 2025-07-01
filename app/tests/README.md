@@ -22,6 +22,7 @@ PYTHONPATH=. pytest app/tests
 - **test_numeric_levels.py**: Tests numeric level conversion logic for package delivery and MQTT payloads.
 
 ## Notes
+
 - All tests are self-contained and do not require a running server; they use Flask's test client.
 - The `__pycache__/` directory contains Python bytecode and can be ignored.
 - For integration or end-to-end tests, see the main README for additional instructions.
