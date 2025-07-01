@@ -7,13 +7,14 @@ echo "Detected device IP: $DEVICE_IP"
 echo "Starting Gunicorn on ${DEVICE_IP}:${PORT} ..."
 
 # Run Gunicorn, binding to your device's IP on port 8000
-gunicorn wsgi --bind ${DEVICE_IP}:8000 
-
-
+gunicorn wsgi:application --bind ${DEVICE_IP}:8000 &
+sleep 5
 GUNICORN_PID=$!
 
-# Wait for the server to fully start
-sleep 5
+
+./run_all_tests.sh
+
+
 
 # If tests succeed
 echo "Tests passed. Stopping server..."
