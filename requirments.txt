@@ -7,3 +7,4 @@ paho-mqtt
 SQLAlchemy
 pytest
 gunicorn
+requests
