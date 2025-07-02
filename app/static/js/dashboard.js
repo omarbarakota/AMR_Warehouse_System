@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
             level: levelNumber
         };
         // Fetch the current home location from the backend
-        let delivery = { x: 0.0, y: 0.0, theta: 0.0 };
+        let delivery = { x: -3.0328106, y: -1.65626, theta: 2.13 };
         let home = { x: 0.0, y: 0.0, theta: 0.0 };
         try {
             const response = await fetch('/api/home-location');
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     y: homeData.y,
                     theta: homeData.theta
                 };
-                delivery=home;
+                //delivery=home;
             }
         } catch (err) {
             console.error('Error fetching home location:', err);
