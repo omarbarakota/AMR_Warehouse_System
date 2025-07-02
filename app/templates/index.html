@@ -632,7 +632,7 @@
           <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
             <h3 style="margin-bottom: 2rem; color: #58a6ff;">Interactive Map</h3>
             <p style="margin-bottom: 2rem; color: #8b949e;">Click the button below to access the interactive map interface</p>
-            <a href="http://localhost:5000" target="_blank" class="btn btn-map btn-lg" style="padding: 1rem 2rem; font-size: 1.2rem;">
+            <a href="http://{{ request.host.split(':')[0] if request else 'localhost' }}:5000" target="_blank" class="btn btn-map btn-lg" style="padding: 1rem 2rem; font-size: 1.2rem;">
               <i class="bi bi-map"></i> Open Interactive Map
             </a>
           </div>
