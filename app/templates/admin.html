@@ -1184,6 +1184,42 @@
         }
         document.addEventListener('DOMContentLoaded', function() {
             loadMqttMessages('all');
+            // Home Position form AJAX handler
+            const homeForm = document.getElementById('homeForm');
+            if (homeForm) {
+                homeForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const feedback = document.getElementById('homeFeedback');
+                    feedback.style.display = 'none';
+                    const data = {
+                        x_coordinate: parseFloat(document.getElementById('home-x').value),
+                        y_coordinate: parseFloat(document.getElementById('home-y').value),
+                        theta_coordinate: parseFloat(document.getElementById('home-theta').value),
+                        level: parseInt(document.getElementById('home-level').value)
+                    };
+                    try {
+                        const response = await fetch('/api/admin/home-location', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await response.json();
+                        if (response.ok) {
+                            feedback.textContent = 'Home position updated!';
+                            feedback.style.color = '#238636';
+                            feedback.style.display = 'block';
+                        } else {
+                            feedback.textContent = result.message || 'Failed to update home position.';
+                            feedback.style.color = '#da3633';
+                            feedback.style.display = 'block';
+                        }
+                    } catch (err) {
+                        feedback.textContent = 'Error: ' + err.message;
+                        feedback.style.color = '#da3633';
+                        feedback.style.display = 'block';
+                    }
+                });
+            }
         });
     </script>
 </body>
