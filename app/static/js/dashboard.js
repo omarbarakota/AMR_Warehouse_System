@@ -68,15 +68,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Global Functions for button onclick ---
 
+    let lastSentX = 0;
+    let lastSentZ = 0;
+    let lastJoystickSent = 0;
+    const JOYSTICK_THRESHOLD = 0.01; // More sensitive
+    const JOYSTICK_THROTTLE_MS = 80; // Always send at least every 80ms
+
     function sendJoystickData(x, z) {
+        const now = Date.now();
+        const significantChange = Math.abs(x - lastSentX) >= JOYSTICK_THRESHOLD || Math.abs(z - lastSentZ) >= JOYSTICK_THRESHOLD;
+        const timeElapsed = now - lastJoystickSent >= JOYSTICK_THROTTLE_MS;
+
+        if (!significantChange && !timeElapsed) return;
+
+        lastSentX = x;
+        lastSentZ = z;
+        lastJoystickSent = now;
+
         const payload = JSON.stringify({ x: x, z: z });
         fetch('/publish', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ topic: '/robot/move', message: payload })
         });
-        // Optionally, still publish directly for real-time UI if needed:
-        // client.publish('/robot/move', payload);
         console.log('[MQTT] Topic: /robot/move | Payload:', payload);
     }
 
@@ -322,15 +336,33 @@ document.addEventListener('DOMContentLoaded', function () {
         client.on('message', function(topic, message) {
             if (topic === '/robot/connection') {
                 const el = document.getElementById('connection-status');
+                const statusEl = document.getElementById('robot-status');
+                const taskEl = document.getElementById('current-task');
                 if (!el) return;
                 const msg = message.toString();
                 el.textContent = msg;
                 if (msg.trim().toLowerCase() === 'connected') {
                     el.classList.remove('bg-danger');
                     el.classList.add('bg-success');
+                    // Set current task to 'Idle' when connected
+                    if (taskEl) {
+                        taskEl.textContent = 'Idle';
+                        statusEl.textContent = 'Non-operational';
+                        statusEl.classList.remove('bg-success');
+                        statusEl.classList.add('bg-danger');
+                    }
                 } else if (msg.trim().toLowerCase() === 'disconnected') {
                     el.classList.remove('bg-success');
                     el.classList.add('bg-danger');
+                    // Also update status and task to 'Disconnected'
+                    if (statusEl) {
+                        statusEl.textContent = 'Disconnected';
+                        statusEl.classList.remove('bg-success');
+                        statusEl.classList.add('bg-danger');
+                    }
+                    if (taskEl) {
+                        taskEl.textContent = 'Disconnected';
+                    }
                 } else {
                     el.classList.remove('bg-success');
                     el.classList.add('bg-danger');
@@ -345,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 taskEl.textContent = msg;
                 // Status logic
                 const lowered = msg.trim().toLowerCase();
-                if (['idle', 'package delivered', 'home reached'].includes(lowered)) {
+                if (['idle', 'package delivered', 'home reached','emergency'].includes(lowered)) {
                     statusEl.textContent = 'Non-operational';
                     statusEl.classList.remove('bg-success');
                     statusEl.classList.add('bg-danger');
