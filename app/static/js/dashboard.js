@@ -92,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
             level: levelNumber
         };
         // Fetch the current home location from the backend
+        let delivery = { x: 0.0, y: 0.0, theta: 0.0 };
         let home = { x: 0.0, y: 0.0, theta: 0.0 };
         try {
             const response = await fetch('/api/home-location');
@@ -102,11 +103,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     y: homeData.y,
                     theta: homeData.theta
                 };
+                delivery=home;
             }
         } catch (err) {
             console.error('Error fetching home location:', err);
         }
-        const goalMsg = { target, home };
+        const goalMsg = { target, delivery };
         const payload = JSON.stringify(goalMsg);
         fetch('/publish', {
             method: 'POST',
@@ -311,5 +313,48 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (canControl) {
         setupCustomJoystick();
+    }
+
+    // --- MQTT Live Status/Connection Updates ---
+    if (typeof client !== 'undefined') {
+        client.subscribe('/robot/connection');
+        client.subscribe('/robot/status');
+        client.on('message', function(topic, message) {
+            if (topic === '/robot/connection') {
+                const el = document.getElementById('connection-status');
+                if (!el) return;
+                const msg = message.toString();
+                el.textContent = msg;
+                if (msg.trim().toLowerCase() === 'connected') {
+                    el.classList.remove('bg-danger');
+                    el.classList.add('bg-success');
+                } else if (msg.trim().toLowerCase() === 'disconnected') {
+                    el.classList.remove('bg-success');
+                    el.classList.add('bg-danger');
+                } else {
+                    el.classList.remove('bg-success');
+                    el.classList.add('bg-danger');
+                }
+            }
+            if (topic === '/robot/status') {
+                const statusEl = document.getElementById('robot-status');
+                const taskEl = document.getElementById('current-task');
+                if (!statusEl || !taskEl) return;
+                const msg = message.toString();
+                // Always display the incoming message as the current task
+                taskEl.textContent = msg;
+                // Status logic
+                const lowered = msg.trim().toLowerCase();
+                if (['idle', 'package delivered', 'home reached'].includes(lowered)) {
+                    statusEl.textContent = 'Non-operational';
+                    statusEl.classList.remove('bg-success');
+                    statusEl.classList.add('bg-danger');
+                } else {
+                    statusEl.textContent = 'Operational';
+                    statusEl.classList.remove('bg-danger');
+                    statusEl.classList.add('bg-success');
+                }
+            }
+        });
     }
 }); 
