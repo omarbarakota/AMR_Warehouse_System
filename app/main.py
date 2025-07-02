@@ -383,28 +383,27 @@ def publish_message():
         if topic == "/amr/joystick" and "z" in message_data:
             if isinstance(message_data.get("z"), (int, float)):
                 message_data["z"] = -message_data["z"]
-        
         if topic == "/amr/operation/home" and message_data.get("operation") == "return_home":
             home_location = get_home_location()
             message_data["coordinates"] = home_location
-            
         message_data = convert_to_float(message_data)
         processed_message = json.dumps(message_data)
     except (json.JSONDecodeError, TypeError):
         pass
-    
+
     print(f"📡 Topic: {topic}")
     print(f"📦 Data: {processed_message}")
-    
+
     mqtt_client.publish(topic, processed_message)
-    
-    # Log published message
-    try:
-        user_id = session.get('user_id')
-        db.session.add(MQTTMessage(topic=topic, message=processed_message, message_type='published', user_id=user_id))
-        db.session.commit()
-    except Exception as e:
-        print(f"Failed to log published MQTT message: {e}")
+
+    # Only log to database if NOT joystick data
+    if topic != "/robot/move":
+        try:
+            user_id = session.get('user_id')
+            db.session.add(MQTTMessage(topic=topic, message=processed_message, message_type='published', user_id=user_id))
+            db.session.commit()
+        except Exception as e:
+            print(f"Failed to log published MQTT message: {e}")
 
     return jsonify({"status": "Message published", "topic": topic, "message": processed_message})
 
