@@ -220,6 +220,26 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('[MQTT] Topic: /robot/emergency | Payload:', payload);
     };
 
+    window.sendArmCommand = (command) => {
+        const payload = JSON.stringify(command);
+        fetch('/publish', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ topic: '/robot/arm/move', message: payload })
+        });
+        console.log('[MQTT] Topic: /robot/arm | Payload:', payload);
+    };
+
+    window.sendArmGripperCommand = (command) => {
+        const payload = JSON.stringify(command);
+        fetch('/publish', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ topic: '/robot/arm/gripper', message: payload })
+        });
+        console.log('[MQTT] Topic: /robot/arm/gripper | Payload:', payload);
+    };
+
     // --- Joystick (Custom, No NippleJS) ---
     function setupCustomJoystick() {
         const joystickBase = document.querySelector('.joystick-base');
