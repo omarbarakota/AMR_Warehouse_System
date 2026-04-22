@@ -173,12 +173,39 @@
     }
 
     .operation-controls {
-      display: none;
-    }
-
-    .operation-controls.active {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
+      margin-top: 1rem;
+    }
+
+    .robot-control-split {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      margin-top: 0.8rem;
+    }
+
+    .manual-panel,
+    .arm-panel {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .packages-panel {
+      margin-top: 1.2rem;
+    }
+
+    .packages-panel h6 {
+      margin-bottom: 0.8rem;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 991px) {
+      .robot-control-split {
+        flex-direction: column;
+      }
     }
 
     .operation-controls button {
@@ -624,102 +651,133 @@
     </div>
   </div>
     
-  <!-- Main Dashboard Split: Map | Robot Control -->
+  <!-- Main Dashboard: Robot Control -->
   <div class="container-fluid px-3">
     <div class="dashboard-split">
-      <div class="map-card">
-        <div class="canvas-container" style="background: none; box-shadow: none; padding: 0; margin: 0; height: 100%; flex: 1; display: flex; flex-direction: column; justify-content: center;">
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
-            <h3 style="margin-bottom: 2rem; color: #58a6ff;">Interactive Map</h3>
-            <p style="margin-bottom: 2rem; color: #8b949e;">Click the button below to access the interactive map interface</p>
-            <a href="http://{{ request.host.split(':')[0] if request else 'localhost' }}:5000" target="_blank" class="btn btn-map btn-lg" style="padding: 1rem 2rem; font-size: 1.2rem;">
-              <i class="bi bi-map"></i> Open Interactive Map
-            </a>
-          </div>
-        </div>
-      </div>
       <div class="control-card">
         {% if can_control %}
         <div class="control-panel" style="background: none; box-shadow: none; padding: 0; margin: 0; height: 100%; flex: 1; display: flex; flex-direction: column;">
           <h4>Robot Control</h4>
-          <div class="btn-group mb-3 w-100" role="group">
-            <button id="btn-movement" class="btn btn-outline-primary btn-toggle active">Movement</button>
-            <button id="btn-operations" class="btn btn-outline-secondary btn-toggle">Operations</button>
+
+          <div class="robot-control-split">
+            <div class="manual-panel">
+              <!-- Movement Controls -->
+              <div class="direction-controls" id="movement-controls">
+                <div class="analog-joystick-container">
+                  <div class="analog-joystick">
+                    <div class="joystick-base">
+                      <div class="joystick-handle" id="joystick-handle"></div>
+                    </div>
+                    <div class="joystick-values">
+                      <span>X: <span id="x-value">0.00</span></span>
+                      <span>Z: <span id="z-value">0.00</span></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Scissor Lift & Gripper Controls Grouped -->
+                <div class="manual-controls compact-controls">
+                  <!-- Scissor Lift Controls -->
+                  <div class="control-group mb-3">
+                    <h6 class="text-center mb-2">Scissor Lift</h6>
+                    <div class="button-group scissor-group">
+                      <button class="btn btn-move-up btn-lg" title="Up" onclick="sendLiftCommand('liftup')">
+                        Up
+                      </button>
+                      <button class="btn btn-move-down btn-lg" title="Down" onclick="sendLiftCommand('liftdown')">
+                        Down
+                      </button>
+                      <button class="btn btn-move-stop btn-lg" title="Stop" onclick="sendLiftCommand('liftstop')">
+                        Stop
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Gripper Movement Controls -->
+                  <div class="control-group mb-3">
+                    <h6 class="text-center mb-2">Gripper Movement</h6>
+                    <div class="button-group gripper-move-group">
+                      <button class="btn btn-gripper-front btn-lg" title="Front" onclick="sendGripperMoveCommand('gripperfront')">
+                        Front
+                      </button>
+                      <button class="btn btn-gripper-back btn-lg" title="Back" onclick="sendGripperMoveCommand('gripperback')">
+                        Back
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Gripper Controls -->
+                  <div class="control-group mb-3">
+                    <h6 class="text-center mb-2">Gripper</h6>
+                    <div class="button-group gripper-group">
+                      <button class="btn btn-gripper-on btn-lg" title="On" onclick="sendGripperCommand('gripperon')">
+                        On
+                      </button>
+                      <button class="btn btn-gripper-off btn-lg" title="Off" onclick="sendGripperCommand('gripperoff')">
+                        Off
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Emergency Stop -->
+                  <div class="emergency-stop mt-4">
+                    <button class="btn btn-emergency btn-lg w-100" onclick="sendEmergencyStop()">
+                      <i class="bi bi-exclamation-triangle"></i> EMERGENCY STOP
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="arm-panel">
+              <div class="manual-controls compact-controls">
+                <div class="control-group mb-3">
+                  <h6 class="text-center mb-2">Robot Arm</h6>
+                  <div class="button-group">
+                    <button class="btn btn-gripper-front btn-lg" title="Arm Up" onclick="sendArmCommand('armup')">
+                      Up
+                    </button>
+                    <button class="btn btn-gripper-back btn-lg" title="Arm Down" onclick="sendArmCommand('armdown')">
+                      Down
+                    </button>
+                    <button class="btn btn-move-up btn-lg" title="Arm Left" onclick="sendArmCommand('armleft')">
+                      Left
+                    </button>
+                    <button class="btn btn-move-down btn-lg" title="Arm Right" onclick="sendArmCommand('armright')">
+                      Right
+                    </button>
+                    <button class="btn btn-gripper-front btn-lg" title="Rotate CW" onclick="sendArmCommand('rotate_cw')">
+                      Rotate +
+                    </button>
+                    <button class="btn btn-gripper-back btn-lg" title="Rotate CCW" onclick="sendArmCommand('rotate_ccw')">
+                      Rotate -
+                    </button>
+                  </div>
+                </div>
+
+                <div class="control-group mb-3">
+                  <h6 class="text-center mb-2">Arm Gripper</h6>
+                  <div class="button-group">
+                    <button class="btn btn-gripper-on btn-lg" title="Open" onclick="sendArmGripperCommand('open')">
+                      Open
+                    </button>
+                    <button class="btn btn-gripper-off btn-lg" title="Close" onclick="sendArmGripperCommand('close')">
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-  
-          <!-- Movement Controls -->
-          <div class="direction-controls" id="movement-controls">
-            <div class="analog-joystick-container">
-              <div class="analog-joystick">
-                <div class="joystick-base">
-                  <div class="joystick-handle" id="joystick-handle"></div>
-                </div>
-                <div class="joystick-values">
-                  <span>X: <span id="x-value">0.00</span></span>
-                  <span>Z: <span id="z-value">0.00</span></span>
-                </div>
+
+          <div class="packages-panel">
+            <h6 class="text-center">Packages</h6>
+            <div class="operation-controls" id="operation-controls">
+              <div id="package-buttons">
+                <!-- Package buttons will be loaded dynamically -->
               </div>
+              <button class="btn btn-return-home return-home" onclick="sendGoal('home').catch(console.error)"><i class="bi bi-house"></i> Return Home</button>
             </div>
-            
-            <!-- Scissor Lift & Gripper Controls Grouped -->
-            <div class="manual-controls compact-controls">
-              <!-- Scissor Lift Controls -->
-              <div class="control-group mb-3">
-                <h6 class="text-center mb-2">Scissor Lift</h6>
-                <div class="button-group scissor-group">
-                  <button class="btn btn-move-up btn-lg" title="Up" onclick="sendLiftCommand('liftup')">
-                    Up
-                  </button>
-                  <button class="btn btn-move-down btn-lg" title="Down" onclick="sendLiftCommand('liftdown')">
-                    Down
-                  </button>
-                  <button class="btn btn-move-stop btn-lg" title="Stop" onclick="sendLiftCommand('liftstop')">
-                    Stop
-                  </button>
-                </div>
-              </div>
-              
-              <!-- Gripper Movement Controls -->
-              <div class="control-group mb-3">
-                <h6 class="text-center mb-2">Gripper Movement</h6>
-                <div class="button-group gripper-move-group">
-                  <button class="btn btn-gripper-front btn-lg" title="Front" onclick="sendGripperMoveCommand('gripperfront')">
-                    Front
-                  </button>
-                  <button class="btn btn-gripper-back btn-lg" title="Back" onclick="sendGripperMoveCommand('gripperback')">
-                    Back
-                  </button>
-                </div>
-              </div>
-              
-              <!-- Gripper Controls -->
-              <div class="control-group mb-3">
-                <h6 class="text-center mb-2">Gripper</h6>
-                <div class="button-group gripper-group">
-                  <button class="btn btn-gripper-on btn-lg" title="On" onclick="sendGripperCommand('gripperon')">
-                    On
-                  </button>
-                  <button class="btn btn-gripper-off btn-lg" title="Off" onclick="sendGripperCommand('gripperoff')">
-                    Off
-                  </button>
-                </div>
-              </div>
-              
-              <!-- Emergency Stop -->
-              <div class="emergency-stop mt-4">
-                <button class="btn btn-emergency btn-lg w-100" onclick="sendEmergencyStop()">
-                  <i class="bi bi-exclamation-triangle"></i> EMERGENCY STOP
-                </button>
-              </div>
-            </div>
-          </div>
-  
-          <!-- Operation Controls -->
-          <div class="operation-controls" id="operation-controls">
-            <div id="package-buttons">
-              <!-- Package buttons will be loaded dynamically -->
-            </div>
-            <button class="btn btn-return-home return-home" onclick="sendGoal('home').catch(console.error)"><i class="bi bi-house"></i> Return Home</button>
           </div>
         </div>
         {% else %}
@@ -761,5 +819,31 @@
   <script src="{{ url_for('static', filename='js/mqtt.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/client.js') }}"></script>
   <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      const packageButtons = document.getElementById('package-buttons');
+      if (!packageButtons) return;
+
+      try {
+        const response = await fetch('/api/packages');
+        if (!response.ok) throw new Error('Failed to load packages');
+
+        const packages = await response.json();
+        packageButtons.innerHTML = '';
+
+        packages.forEach(pkg => {
+          if (pkg.package_id === 'HOME') return;
+          const button = document.createElement('button');
+          button.className = 'btn btn-outline-primary';
+          button.textContent = `${pkg.package_id}`;
+          button.title = `${pkg.name} - Level: ${pkg.level}`;
+          button.onclick = (event) => window.sendPackageGoal && window.sendPackageGoal(pkg, event);
+          packageButtons.appendChild(button);
+        });
+      } catch (error) {
+        packageButtons.innerHTML = '<p class="text-danger">Could not load packages.</p>';
+      }
+    });
+  </script>
 </body>
 </html>
