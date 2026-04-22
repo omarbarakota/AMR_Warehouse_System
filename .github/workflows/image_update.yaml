@@ -61,7 +61,7 @@ jobs:
 
     env:
       REPOSITORY: grad_project # Define Dockerhub repo here
-      IMAGE_TAG: v0.0.1 # Define the image tag here
+      IMAGE_TAG: v0.1.1 # Define the image tag here
 
     steps:
     - name: Checkout code
