@@ -51,3 +51,18 @@ If you need to inspect the service status:
 ```bash
 sudo systemctl status mosquitto
 ```
+
+## Launch the bridge
+
+From the repository root, after sourcing your ROS 2 environment:
+
+```bash
+source /opt/ros/humble/setup.bash
+ros2 launch ros2/mqtt_ros2_bridge/launch/mqtt_ros2_bridge.launch.py
+```
+
+If you want to override the broker host or prefix:
+
+```bash
+ros2 launch ros2/mqtt_ros2_bridge/launch/mqtt_ros2_bridge.launch.py mqtt_host:=localhost mqtt_topic_prefix:=/warehouse
+```
